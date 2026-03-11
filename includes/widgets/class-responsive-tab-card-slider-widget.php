@@ -110,21 +110,22 @@ class Responsive_Tab_Card_Slider_Widget extends Widget_Base {
 		);
 
 		$repeater->add_control(
-			'heading_content_group',
-			array(
-				'label'     => esc_html__( 'Main Content', 'responsive-tab-card-slider' ),
-				'type'      => Controls_Manager::HEADING,
-				'separator' => 'before',
-			)
-		);
-
-		$repeater->add_control(
 			'tab_title',
 			array(
 				'label'       => esc_html__( 'Tab Title', 'responsive-tab-card-slider' ),
 				'type'        => Controls_Manager::TEXT,
 				'default'     => esc_html__( 'Ramazan', 'responsive-tab-card-slider' ),
 				'label_block' => true,
+			)
+		);
+
+		$repeater->add_control(
+			'accent_color',
+			array(
+				'label'       => esc_html__( 'General Accent Color', 'responsive-tab-card-slider' ),
+				'type'        => Controls_Manager::COLOR,
+				'default'     => '#e02b20',
+				'description' => esc_html__( 'Used for active tab and donation button by default.', 'responsive-tab-card-slider' ),
 			)
 		);
 
@@ -147,11 +148,34 @@ class Responsive_Tab_Card_Slider_Widget extends Widget_Base {
 		);
 
 		$repeater->add_control(
+			'use_custom_tab_active_color',
+			array(
+				'label'        => esc_html__( 'Use Custom Active Tab Color', 'responsive-tab-card-slider' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'label_on'     => esc_html__( 'Yes', 'responsive-tab-card-slider' ),
+				'label_off'    => esc_html__( 'No', 'responsive-tab-card-slider' ),
+				'return_value' => 'yes',
+				'default'      => '',
+			)
+		);
+
+		$repeater->add_control(
 			'tab_active_color',
 			array(
-				'label'   => esc_html__( 'Tab Active Accent Color', 'responsive-tab-card-slider' ),
-				'type'    => Controls_Manager::COLOR,
-				'default' => '#dc2626',
+				'label'     => esc_html__( 'Tab Active Color Override', 'responsive-tab-card-slider' ),
+				'type'      => Controls_Manager::COLOR,
+				'condition' => array(
+					'use_custom_tab_active_color' => 'yes',
+				),
+			)
+		);
+
+		$repeater->add_control(
+			'heading_content_group',
+			array(
+				'label'     => esc_html__( 'Main Content', 'responsive-tab-card-slider' ),
+				'type'      => Controls_Manager::HEADING,
+				'separator' => 'before',
 			)
 		);
 
@@ -236,11 +260,25 @@ class Responsive_Tab_Card_Slider_Widget extends Widget_Base {
 		);
 
 		$repeater->add_control(
+			'use_custom_button_color',
+			array(
+				'label'        => esc_html__( 'Use Custom Link 2 Button Color', 'responsive-tab-card-slider' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'label_on'     => esc_html__( 'Yes', 'responsive-tab-card-slider' ),
+				'label_off'    => esc_html__( 'No', 'responsive-tab-card-slider' ),
+				'return_value' => 'yes',
+				'default'      => '',
+			)
+		);
+
+		$repeater->add_control(
 			'link2_color',
 			array(
-				'label'   => esc_html__( 'Link 2 Highlight Color', 'responsive-tab-card-slider' ),
-				'type'    => Controls_Manager::COLOR,
-				'default' => '#e02b20',
+				'label'     => esc_html__( 'Link 2 Button Color Override', 'responsive-tab-card-slider' ),
+				'type'      => Controls_Manager::COLOR,
+				'condition' => array(
+					'use_custom_button_color' => 'yes',
+				),
 			)
 		);
 
@@ -387,23 +425,21 @@ class Responsive_Tab_Card_Slider_Widget extends Widget_Base {
 				'default'     => array(
 						array(
 							'tab_title'      => esc_html__( 'Ramazan', 'responsive-tab-card-slider' ),
+							'accent_color'   => '#e02b20',
 							'tab_text_color' => '#374151',
 							'tab_bg_color'   => '#ffffff',
-							'tab_active_color' => '#dc2626',
 							'main_title'     => esc_html__( 'Bir yetimi sevindir', 'responsive-tab-card-slider' ),
 							'link1_text'     => esc_html__( 'Detaylı Bilgi >', 'responsive-tab-card-slider' ),
 							'link2_text'     => esc_html__( 'Bağışla', 'responsive-tab-card-slider' ),
-							'link2_color'    => '#e02b20',
 						),
 						array(
 							'tab_title'      => esc_html__( 'Zekat', 'responsive-tab-card-slider' ),
+							'accent_color'   => '#e02b20',
 							'tab_text_color' => '#374151',
 							'tab_bg_color'   => '#ffffff',
-							'tab_active_color' => '#dc2626',
 							'main_title'     => esc_html__( 'İyiliğini paylaş', 'responsive-tab-card-slider' ),
 							'link1_text'     => esc_html__( 'Detaylı Bilgi >', 'responsive-tab-card-slider' ),
 							'link2_text'     => esc_html__( 'Bağışla', 'responsive-tab-card-slider' ),
-							'link2_color'    => '#e02b20',
 						),
 					),
 				)
@@ -649,8 +685,10 @@ class Responsive_Tab_Card_Slider_Widget extends Widget_Base {
 													<?php
 													$secondary_text  = isset( $slide['link2_text'] ) ? trim( (string) $slide['link2_text'] ) : '';
 													$secondary_link  = isset( $slide['link2'] ) && is_array( $slide['link2'] ) ? $slide['link2'] : array();
-													$secondary_color = ! empty( $slide['link2_color'] ) ? sanitize_hex_color( $slide['link2_color'] ) : '';
-													$secondary_style = '--rtcs-link2-bg:' . ( $secondary_color ?: '#e02b20' ) . ';';
+													$accent_color    = ! empty( $slide['accent_color'] ) ? sanitize_hex_color( $slide['accent_color'] ) : '';
+													$legacy_color    = ! empty( $slide['link2_color'] ) ? sanitize_hex_color( $slide['link2_color'] ) : '';
+													$secondary_color = ( ! empty( $slide['use_custom_button_color'] ) && 'yes' === $slide['use_custom_button_color'] && $legacy_color ) ? $legacy_color : '';
+													$secondary_style = '--rtcs-link2-bg:' . ( $secondary_color ?: ( $accent_color ?: ( $legacy_color ?: '#e02b20' ) ) ) . ';';
 
 													if ( '' !== $secondary_text && ! empty( $secondary_link['url'] ) ) :
 														?>
@@ -890,15 +928,18 @@ class Responsive_Tab_Card_Slider_Widget extends Widget_Base {
 	 * @return string
 	 */
 	private function build_tab_style( $slide ) {
-		$text_color   = ! empty( $slide['tab_text_color'] ) ? sanitize_hex_color( $slide['tab_text_color'] ) : '#374151';
-		$bg_color     = ! empty( $slide['tab_bg_color'] ) ? sanitize_hex_color( $slide['tab_bg_color'] ) : '#ffffff';
-		$active_color = ! empty( $slide['tab_active_color'] ) ? sanitize_hex_color( $slide['tab_active_color'] ) : '#dc2626';
+		$text_color        = ! empty( $slide['tab_text_color'] ) ? sanitize_hex_color( $slide['tab_text_color'] ) : '#374151';
+		$bg_color          = ! empty( $slide['tab_bg_color'] ) ? sanitize_hex_color( $slide['tab_bg_color'] ) : '#ffffff';
+		$accent_color      = ! empty( $slide['accent_color'] ) ? sanitize_hex_color( $slide['accent_color'] ) : '';
+		$use_custom_active = ( ! empty( $slide['use_custom_tab_active_color'] ) && 'yes' === $slide['use_custom_tab_active_color'] );
+		$legacy_color      = ! empty( $slide['tab_active_color'] ) ? sanitize_hex_color( $slide['tab_active_color'] ) : '';
+		$active_color      = ( $use_custom_active && $legacy_color ) ? $legacy_color : '';
 
 		return sprintf(
 			'--rtcs-tab-text:%1$s;--rtcs-tab-bg:%2$s;--rtcs-tab-accent:%3$s;',
 			$text_color ? $text_color : '#374151',
 			$bg_color ? $bg_color : '#ffffff',
-			$active_color ? $active_color : '#dc2626'
+			$active_color ? $active_color : ( $accent_color ? $accent_color : ( $legacy_color ? $legacy_color : '#dc2626' ) )
 		);
 	}
 }

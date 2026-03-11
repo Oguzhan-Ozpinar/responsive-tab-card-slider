@@ -3,7 +3,7 @@
  * Plugin Name: Responsive Tab to Card Slider for Elementor
  * Plugin URI: https://mavera.site
  * Description: Adds a responsive tab-to-card slider widget for Elementor using the bundled Swiper library.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Requires at least: 6.5
  * Requires PHP: 7.4
  * Author: Mavera Dijital A.Ş.
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class RTCS_Elementor_Plugin {
-	const VERSION = '1.0.1';
+	const VERSION = '1.0.2';
 
 	/**
 	 * @var RTCS_Elementor_Plugin|null

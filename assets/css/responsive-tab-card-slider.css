@@ -36,6 +36,15 @@
 	height: auto;
 }
 
+.rtcs-slide.is-clickable .rtcs-slide-shell {
+	cursor: pointer;
+}
+
+.rtcs-slide.is-clickable:focus-visible .rtcs-slide-shell {
+	outline: 2px solid #2563eb;
+	outline-offset: 2px;
+}
+
 .rtcs-slide-shell {
 	background: #f5f6f8;
 	border-radius: var(--rtcs-radius);
@@ -292,11 +301,10 @@
 
 .rtcs-widget.is-mobile .rtcs-slide {
 	box-sizing: border-box;
-	padding-bottom: var(--rtcs-mobile-shadow-space);
+	padding-bottom: 0;
 }
 
 .rtcs-widget.is-mobile {
-	--rtcs-mobile-shadow-space: 34px;
 	padding-bottom: 24px;
 }
 
@@ -320,7 +328,6 @@
 .rtcs-widget.is-mobile .rtcs-text {
 	background: #ffffff;
 	border-radius: 0 0 18px 18px;
-	box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
 	order: 2;
 	padding: 20px 16px 22px;
 }

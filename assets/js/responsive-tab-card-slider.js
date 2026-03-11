@@ -149,6 +149,68 @@
 		} );
 
 		/**
+		 * Determine whether an element is interactive and should not trigger slide navigation.
+		 *
+		 * @param {Element|null} targetEventEl Event target element.
+		 * @return {boolean}
+		 */
+		function isInteractiveTarget( targetEventEl ) {
+			if ( ! targetEventEl ) {
+				return false;
+			}
+
+			return Boolean(
+				targetEventEl.closest(
+					'a, button, input, textarea, select, option, label, [role="button"], .rtcs-nav, .rtcs-tab'
+				)
+			);
+		}
+
+		$root.on( 'click', '.rtcs-slide.is-clickable', function ( event ) {
+			if ( ! swiper.allowClick ) {
+				return;
+			}
+
+			const eventTarget = event.target instanceof Element ? event.target : null;
+
+			if ( isInteractiveTarget( eventTarget ) ) {
+				return;
+			}
+
+			const url = this.getAttribute( 'data-slide-url' );
+
+			if ( ! url ) {
+				return;
+			}
+
+			const target = this.getAttribute( 'data-slide-target' ) || '_self';
+
+			if ( target === '_blank' ) {
+				window.open( url, '_blank', 'noopener,noreferrer' );
+				return;
+			}
+
+			window.location.href = url;
+		} );
+
+		$root.on( 'keydown', '.rtcs-slide.is-clickable', function ( event ) {
+			const key = event.key;
+
+			if ( key !== 'Enter' && key !== ' ' ) {
+				return;
+			}
+
+			const eventTarget = event.target instanceof Element ? event.target : null;
+
+			if ( eventTarget && eventTarget !== this && isInteractiveTarget( eventTarget ) ) {
+				return;
+			}
+
+			event.preventDefault();
+			this.click();
+		} );
+
+		/**
 		 * Toggle view mode class by breakpoint.
 		 */
 		function updateModeClass() {

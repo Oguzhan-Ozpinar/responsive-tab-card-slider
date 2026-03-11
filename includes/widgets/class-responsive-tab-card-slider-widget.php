@@ -8,6 +8,7 @@
 namespace RTCS\Widgets;
 
 use Elementor\Controls_Manager;
+use Elementor\Group_Control_Box_Shadow;
 use Elementor\Icons_Manager;
 use Elementor\Repeater;
 use Elementor\Utils;
@@ -89,6 +90,15 @@ class Responsive_Tab_Card_Slider_Widget extends Widget_Base {
 		$repeater = new Repeater();
 
 		$repeater->add_control(
+			'heading_tab_group',
+			array(
+				'label'     => esc_html__( 'Tab Area', 'responsive-tab-card-slider' ),
+				'type'      => Controls_Manager::HEADING,
+				'separator' => 'before',
+			)
+		);
+
+		$repeater->add_control(
 			'tab_icon',
 			array(
 				'label'   => esc_html__( 'Tab Icon', 'responsive-tab-card-slider' ),
@@ -96,6 +106,15 @@ class Responsive_Tab_Card_Slider_Widget extends Widget_Base {
 				'default' => array(
 					'url' => Utils::get_placeholder_image_src(),
 				),
+			)
+		);
+
+		$repeater->add_control(
+			'heading_content_group',
+			array(
+				'label'     => esc_html__( 'Main Content', 'responsive-tab-card-slider' ),
+				'type'      => Controls_Manager::HEADING,
+				'separator' => 'before',
 			)
 		);
 
@@ -152,6 +171,15 @@ class Responsive_Tab_Card_Slider_Widget extends Widget_Base {
 				'label'   => esc_html__( 'Description', 'responsive-tab-card-slider' ),
 				'type'    => Controls_Manager::WYSIWYG,
 				'default' => esc_html__( 'Açıklama metninizi buraya ekleyin.', 'responsive-tab-card-slider' ),
+			)
+		);
+
+		$repeater->add_control(
+			'heading_cta_group',
+			array(
+				'label'     => esc_html__( 'Buttons (CTAs)', 'responsive-tab-card-slider' ),
+				'type'      => Controls_Manager::HEADING,
+				'separator' => 'before',
 			)
 		);
 
@@ -213,6 +241,35 @@ class Responsive_Tab_Card_Slider_Widget extends Widget_Base {
 				'label'   => esc_html__( 'Link 2 Highlight Color', 'responsive-tab-card-slider' ),
 				'type'    => Controls_Manager::COLOR,
 				'default' => '#e02b20',
+			)
+		);
+
+		$repeater->add_control(
+			'heading_slide_link_group',
+			array(
+				'label'     => esc_html__( 'Slide Click Link', 'responsive-tab-card-slider' ),
+				'type'      => Controls_Manager::HEADING,
+				'separator' => 'before',
+			)
+		);
+
+		$repeater->add_control(
+			'slide_link',
+			array(
+				'label'         => esc_html__( 'Slide Click URL', 'responsive-tab-card-slider' ),
+				'type'          => Controls_Manager::URL,
+				'placeholder'   => esc_url( home_url( '/' ) ),
+				'show_external' => true,
+				'description'   => esc_html__( 'If set, clicking empty areas of this slide navigates to this URL.', 'responsive-tab-card-slider' ),
+			)
+		);
+
+		$repeater->add_control(
+			'heading_bg_group',
+			array(
+				'label'     => esc_html__( 'Desktop Background', 'responsive-tab-card-slider' ),
+				'type'      => Controls_Manager::HEADING,
+				'separator' => 'before',
 			)
 		);
 
@@ -293,6 +350,15 @@ class Responsive_Tab_Card_Slider_Widget extends Widget_Base {
 		);
 
 		$repeater->add_control(
+			'heading_image_group',
+			array(
+				'label'     => esc_html__( 'Images', 'responsive-tab-card-slider' ),
+				'type'      => Controls_Manager::HEADING,
+				'separator' => 'before',
+			)
+		);
+
+		$repeater->add_control(
 			'right_image',
 			array(
 				'label'   => esc_html__( 'Right/Main Image', 'responsive-tab-card-slider' ),
@@ -348,7 +414,15 @@ class Responsive_Tab_Card_Slider_Widget extends Widget_Base {
 		$this->start_controls_section(
 			'section_slider_settings',
 			array(
-				'label' => esc_html__( 'Slider Settings', 'responsive-tab-card-slider' ),
+				'label' => esc_html__( 'Slider Behavior', 'responsive-tab-card-slider' ),
+			)
+		);
+
+		$this->add_control(
+			'heading_behavior_group',
+			array(
+				'label' => esc_html__( 'Playback', 'responsive-tab-card-slider' ),
+				'type'  => Controls_Manager::HEADING,
 			)
 		);
 
@@ -402,6 +476,15 @@ class Responsive_Tab_Card_Slider_Widget extends Widget_Base {
 		);
 
 		$this->add_control(
+			'heading_responsive_group',
+			array(
+				'label'     => esc_html__( 'Responsive', 'responsive-tab-card-slider' ),
+				'type'      => Controls_Manager::HEADING,
+				'separator' => 'before',
+			)
+		);
+
+		$this->add_control(
 			'mobile_breakpoint',
 			array(
 				'label'   => esc_html__( 'Mobile Breakpoint (px)', 'responsive-tab-card-slider' ),
@@ -410,6 +493,57 @@ class Responsive_Tab_Card_Slider_Widget extends Widget_Base {
 				'min'     => 320,
 				'max'     => 1440,
 				'step'    => 1,
+			)
+		);
+
+		$this->end_controls_section();
+
+		$this->start_controls_section(
+			'section_style_shadows',
+			array(
+				'label' => esc_html__( 'Card Shadows', 'responsive-tab-card-slider' ),
+				'tab'   => Controls_Manager::TAB_STYLE,
+			)
+		);
+
+		$this->add_control(
+			'heading_shadow_desktop',
+			array(
+				'label' => esc_html__( 'Desktop', 'responsive-tab-card-slider' ),
+				'type'  => Controls_Manager::HEADING,
+			)
+		);
+
+		$this->add_group_control(
+			Group_Control_Box_Shadow::get_type(),
+			array(
+				'name'     => 'desktop_card_shadow',
+				'selector' => '{{WRAPPER}} .rtcs-slide-shell',
+			)
+		);
+
+		$this->add_control(
+			'heading_shadow_mobile',
+			array(
+				'label'     => esc_html__( 'Mobile', 'responsive-tab-card-slider' ),
+				'type'      => Controls_Manager::HEADING,
+				'separator' => 'before',
+			)
+		);
+
+		$this->add_group_control(
+			Group_Control_Box_Shadow::get_type(),
+			array(
+				'name'     => 'mobile_card_shell_shadow',
+				'selector' => '{{WRAPPER}} .rtcs-widget.is-mobile .rtcs-slide-shell',
+			)
+		);
+
+		$this->add_group_control(
+			Group_Control_Box_Shadow::get_type(),
+			array(
+				'name'     => 'mobile_content_shadow',
+				'selector' => '{{WRAPPER}} .rtcs-widget.is-mobile .rtcs-text',
 			)
 		);
 
@@ -466,12 +600,21 @@ class Responsive_Tab_Card_Slider_Widget extends Widget_Base {
 								$mobile_image_url   = $this->get_media_url( $slide['mobile_image'] ?? array() );
 								$rendered_image_url = $desktop_image_url ?: $mobile_image_url;
 								$background_style   = $this->get_desktop_background_style( $slide );
+								$slide_link         = isset( $slide['slide_link'] ) && is_array( $slide['slide_link'] ) ? $slide['slide_link'] : array();
+								$slide_click_url    = ! empty( $slide_link['url'] ) ? esc_url( $slide_link['url'] ) : '';
+								$slide_click_target = ! empty( $slide_link['is_external'] ) ? '_blank' : '_self';
+								$slide_classes      = 'rtcs-slide swiper-slide' . ( '' !== $slide_click_url ? ' is-clickable' : '' );
 								?>
 								<article
-									class="rtcs-slide swiper-slide"
+									class="<?php echo esc_attr( $slide_classes ); ?>"
 									id="<?php echo esc_attr( $slide_id ); ?>"
 									role="tabpanel"
 									aria-labelledby="<?php echo esc_attr( $tab_id ); ?>"
+									<?php if ( '' !== $slide_click_url ) : ?>
+										data-slide-url="<?php echo esc_url( $slide_click_url ); ?>"
+										data-slide-target="<?php echo esc_attr( $slide_click_target ); ?>"
+										tabindex="0"
+									<?php endif; ?>
 								>
 									<div class="rtcs-slide-shell" style="<?php echo esc_attr( $background_style ); ?>">
 										<div class="rtcs-slide-layout">
